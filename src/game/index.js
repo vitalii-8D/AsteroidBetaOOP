@@ -1,12 +1,14 @@
-import World from "./World";
+import Scene from "./Scene";
 
 class Game {
-   constructor() {
-      this.world = new World()
+   constructor(width = 1200, height = 800) {
+      this.width = width
+      this.height = height
+      this.scene = new Scene(width, height)
    }
 
-   update() {
-      this.world.update()
+   update(dt) {
+      this.scene.update(dt)
    }
 
 }

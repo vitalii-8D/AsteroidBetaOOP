@@ -1,9 +1,11 @@
-import Collider from "./Collider";
-
 const SHIP_MOVING_SPEED = 1
-const SHIP_ROTATION_SPEED = 5
+const SHIP_ROTATION_SPEED = 7
 const LASER_SPEED = 10
-const LASER_TRAVEL_DISTANCE = 300
+const LASER_TRAVEL_DISTANCE = 800
+
+const SHIP_EXPLOSION_DUR = 3 // sec
+const SHIP_UNVIS_NUM = 29 // number
+const SHIP_UNVIS_BLINK_DUR = 0.3 // sec
 
 class Ship {
    constructor(x = 100, y = 50) {
@@ -20,6 +22,13 @@ class Ship {
       this.velocity_y = 0
 
       this.lasers = []
+
+      this.unvisible = true
+      this.blink_number = SHIP_UNVIS_NUM
+      this.blink_time = Math.floor(SHIP_UNVIS_BLINK_DUR * 30)
+
+      this.is_dead = false
+      this.death_timer = 0
    }
 
    accelerate() {
@@ -35,12 +44,30 @@ class Ship {
       this.lasers.splice(index, 1)
    }
 
-   update() {
-      this.x += this.velocity_x
-      this.y += this.velocity_y
+   death() {
+      this.is_dead = true
+      this.velocity_x = 0
+      this.velocity_y = 0
+      this.death_timer = SHIP_EXPLOSION_DUR * 30
+   }
 
-      // this.angle += this.rotation * 5 / 180 * Math.PI
-      this.angle += this.rotation * SHIP_ROTATION_SPEED * (2 * Math.PI / 360)
+   update() {
+      if (this.death_timer > 0) {
+         this.death_timer--
+         return undefined
+      }
+      if (this.blink_number > 0) {
+         this.blink_time--
+
+         if (this.blink_time === 0) {
+            this.blink_number--
+            if (this.blink_number === 0) {
+               this.unvisible = false
+            }
+            this.blink_time = Math.floor(SHIP_UNVIS_BLINK_DUR * 30)
+            this.unvisible = !this.unvisible
+         }
+      }
 
       for (let i = this.lasers.length - 1; i >= 0; i--) {
          this.lasers[i].update() // update laser`s position and distance
@@ -52,6 +79,12 @@ class Ship {
       this.lasers.forEach(laser => {
          laser.update()
       })
+
+      this.x += this.velocity_x
+      this.y += this.velocity_y
+
+      // this.angle += this.rotation * 5 / 180 * Math.PI
+      this.angle += this.rotation * SHIP_ROTATION_SPEED * (2 * Math.PI / 360)
    }
 
 }

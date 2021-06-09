@@ -6,7 +6,15 @@ class Display {
       this.context = canvas.getContext('2d')
    }
 
-   drawShip(x, y, radius, angle, color) {
+   drawShip({x, y, radius, angle, color, unvisible, is_dead}) {
+      if (is_dead) {
+         this.drawShipsExplosion(x, y, radius)
+         return undefined
+      }
+      if (!unvisible) {
+         return undefined
+      }
+
       this.buffer.strokeStyle = color
       this.buffer.lineWidth = radius / 10
       this.buffer.beginPath()
@@ -26,6 +34,24 @@ class Display {
       this.buffer.stroke();
 
       this.drawHitbox(x, y, radius)
+   }
+
+   drawShipsExplosion(x, y, radius) {
+      this.buffer.fillStyle = 'red'
+      this.buffer.beginPath()
+      this.buffer.arc(x, y, radius, 0, 2 * Math.PI)
+      this.buffer.closePath()
+      this.buffer.fill()
+      this.buffer.fillStyle = 'orange'
+      this.buffer.beginPath()
+      this.buffer.arc(x, y, radius * 0.65, 0, 2 * Math.PI)
+      this.buffer.closePath()
+      this.buffer.fill()
+      this.buffer.fillStyle = 'white'
+      this.buffer.beginPath()
+      this.buffer.arc(x, y, radius * 0.3, 0, 2 * Math.PI)
+      this.buffer.closePath()
+      this.buffer.fill()
    }
 
    drawLaser(x, y, radius, fill_color) {
@@ -52,6 +78,14 @@ class Display {
       this.buffer.stroke()
 
       this.drawHitbox(x, y, radius)
+   }
+
+   drawParticles(coordinates, sizes) {
+      for (let i = 0; i < coordinates.length; i++) {
+         this.buffer.fillStyle = 'orange'
+         this.buffer.arc(coordinates[i][0], coordinates[i][1], sizes[i], 0, 2 * Math.PI)
+         this.buffer.fill()
+      }
    }
 
    drawHitbox(x, y, radius) {

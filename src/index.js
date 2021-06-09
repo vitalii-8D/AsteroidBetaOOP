@@ -10,47 +10,45 @@ window.addEventListener('load', () => {
       controller.keyDownUp(event)
    }
    const resize = (event) => {
-      display.resize(document.documentElement.clientWidth - 32, document.documentElement.clientHeight - 32, game.world.height / game.world.width)
+      display.resize(document.documentElement.clientWidth - 32, document.documentElement.clientHeight - 32, game.height / game.width)
       display.render()
    }
 
    const render = () => {
-      display.fill(game.world.background_color)
-      display.drawShip(
-         game.world.ship.x,
-         game.world.ship.y,
-         game.world.ship.radius,
-         game.world.ship.angle,
-         game.world.ship.color
-      )
+      display.fill(game.scene.background_color)
+      display.drawShip(game.scene.ship)
 
-      game.world.ship.lasers.forEach((laser, i) => {
+      // display.drawLaser(game.scene.ship.lasers, radius, color)
+
+      game.scene.ship.lasers.forEach((laser, i) => {
          const {x, y, radius, color} = laser
          display.drawLaser(x, y, radius, color)
       })
-      game.world.asteroids.forEach(ast => {
+      game.scene.asteroids.forEach(ast => {
          const {x, y, radius, vertices, irregularity} = ast
          display.drawAsteroid(x, y, radius, vertices, irregularity, '#eeddee')
       })
 
+      // game.scene.explode_particles.coordin
+
       display.render()
    }
 
-   const update = () => {
-      if (controller.left.active) {game.world.ship.rotation = 1}
-      if (controller.right.active) {game.world.ship.rotation = -1}
+   const update = (dt) => {
+      if (controller.left.active) {game.scene.ship.rotation = 1}
+      if (controller.right.active) {game.scene.ship.rotation = -1}
       if (!controller.left.active && !controller.right.active) {
-         game.world.ship.rotation = 0
+         game.scene.ship.rotation = 0
       }
 
-      if (controller.up.active) {game.world.ship.accelerate();}
+      if (controller.up.active) {game.scene.ship.accelerate();}
 
       if (controller.spacebar.active) {
-         game.world.ship.addLaser();
+         game.scene.ship.addLaser();
          controller.spacebar.active = false
       }
 
-      game.update()
+      game.update(dt)
    }
 
    let controller = new Controller()
@@ -58,8 +56,8 @@ window.addEventListener('load', () => {
    let game = new Game()
    let engine = new Engine(1000/30, update, render)
 
-   display.buffer.canvas.width = game.world.width
-   display.buffer.canvas.height = game.world.height
+   display.buffer.canvas.width = game.width
+   display.buffer.canvas.height = game.height
 
    window.addEventListener('resize', resize)
    window.addEventListener('keydown', keyDownUp)
