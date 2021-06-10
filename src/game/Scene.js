@@ -1,11 +1,14 @@
 import Ship from "./Ship";
-import {asteroidsFactory, Particles} from "./Asteroid";
-import {distanceBetweenPoint} from "./Collider";
+import AsteroidBelt from "./Asteroid";
+import Collider ,{distanceBetweenPoint} from "./Collider";
+import Particles from "./Particles";
 
 const START_ASTEROID_NUMBER = 8
 
-class Scene {
+class Scene extends Collider {
    constructor(width , height ) {
+      super()
+
       this.background_color = 'rgba(20, 20, 20, 1)'
 
       this.friction = 0.95
@@ -16,14 +19,14 @@ class Scene {
       this.width = width
       this.height = height
 
-      this.asteroids = []
+      this.asteroid_belt = new AsteroidBelt(width, height)
 
       this.init()
    }
 
    init() {
       this.createShip()
-      this.createAsteroids()
+      this.asteroid_belt.init()
    }
 
    update() {
@@ -38,19 +41,26 @@ class Scene {
 
       this.collideWorldBounds(this.ship)
 
+      this.checkCollisionBetween(this.ship, this.asteroids, (message) => {
+         this.ship.collideWithAsteroid()
+      })
+      this.checkCollisionBetween(this.asteroids, this.ship.shooting_system.lasers, (message) => {
+         console.log('Lasers & asteroids');
+      })
+
       for (let ast_index = this.asteroids.length - 1; ast_index >=0; ast_index--) {
          const ast = this.asteroids[ast_index]
 
          ast.update()
 
          this.collideWorldBounds(ast)
+
          ast.collideWith(this.ship, () => { // check collision with the Ship
             this.shipCollision()
          })
-         this.ship.lasers.forEach((laser, laser_index) => { // check collision with lasers
-            ast.collideWith(laser, () => {
-               this.hitAsteroid(ast, laser, ast_index, laser_index)
-            })
+
+         ast.collideWith(this.ship.shooting_system.lasers, (ast, laser, laser_index) => {
+            this.hitAsteroid(ast, laser, ast_index, laser_index)
          })
       }
 
@@ -73,7 +83,7 @@ class Scene {
    }
 
    hitAsteroid(ast, laser, ast_index, laser_index) {
-      this.ship.deleteLaser(laser_index)
+      this.ship.shooting_system.deleteLaser(laser_index)
 
       if (ast.type !== 'small') {
          const new_asteroids = asteroidsFactory.collapse(ast.x, ast.y, ast.type)
@@ -101,10 +111,10 @@ class Scene {
       // })
    }
 
-   shipCollision() {
-      if (this.ship.blink_number > 0) return undefined
-      this.ship.death()
-   }
+   // shipCollision() {
+   //    if (this.ship.blink_number > 0) return undefined
+   //    this.ship.death()
+   // }
 
    createAsteroids() {
       const {x, y} = this.ship
@@ -118,7 +128,7 @@ class Scene {
             ay = Math.floor(Math.random() * this.height)
          } while (distanceBetweenPoint(x, ax, y, ay) < 200)
 
-         const new_asteroid = asteroidsFactory.random(undefined, undefined, ax, ay)
+         const new_asteroid = asteroidsFactory.random(ax, ay)
          this.asteroids.push(new_asteroid)
       }
    }

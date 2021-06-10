@@ -4,6 +4,7 @@ const MAX_VERTICES = 16
 const MIN_VERTICES = 5
 const PRONGNESS = 1 // from 0 to 1
 const ASTEROIDS_SPEED = 2
+const START_ASTEROID_NUMBER = 8
 
 const SML_AST_POINTS = 500
 const SML_AST_RADIUS = 15
@@ -11,11 +12,6 @@ const MED_AST_POINTS = 300
 const MED_AST_RADIUS = 25
 const LRG_AST_POINTS = 100
 const LRG_AST_RADIUS = 40
-
-const PARTICLES_NUMBER = 20
-const PARTICLES_SPEED = 10
-const PARTICLES_MAX_RADIUS = 5
-const PARTICLES_MAX_TRAVEL_DISTANCE = 100
 
 class Asteroid extends Collider {
    constructor(x, y) {
@@ -95,27 +91,23 @@ class AsteroidFactory {
       if (type === 'large') {
          return [this.create(x, y, 'medium'), this.create(x, y, 'medium')]
       }
-
-      return undefined
    }
 
-   random(w, h, x, y) {
+   random(x, y) {
       const random = Math.random()
-      let ax = x
-      let ay = y
 
-      if ((!ax || !ay && w && h)) {
-         [ax, ay] = randomizer(w, h)
-      }
+      let type = undefined
 
       if (random < 0.35) {
-         return this.create(ax, ay, 'large')
+         type = 'large'
       }
       if (random > 0.55) {
-         return this.create(ax, ay, 'medium')
+         type = 'medium'
+      } else {
+         type = 'small'
       }
 
-      return this.create(ax, ay)
+      return this.create(x, y, type)
    }
 
 }
@@ -134,48 +126,56 @@ const randomizer = (w, h) => {
    return [ax, ay]
 }
 
-class Particles {
-   constructor() {
-      this.number = PARTICLES_NUMBER
-      this.max_distance = PARTICLES_MAX_TRAVEL_DISTANCE
-      this.max_distances = []
-      this.coordinates = []
-      this.velocities = []
-      this.distances = []
-      this.sizes = []
+
+
+class AsteroidBelt {
+   constructor(width, height) {
+      this.game_width = width
+      this.game_height = height
+
+      this.asteroids = []
+      this.asteroidsFactory = new AsteroidFactory()
    }
 
-   emit(x, y) {
-      for (let i = 0; i < this.number; i++) {
-         this.coordinates.push([x, y])
-         this.velocities.push([(Math.random() * 2 - 1) * PARTICLES_SPEED, (Math.random() * 2 - 1) * PARTICLES_SPEED])
-         this.max_distances.push(Math.random() * (this.max_distance - this.max_distance * 0.4) + this.max_distance * 0.4)
-         this.distances.push(0)
-         this.sizes.push(Math.random() < 0.2 ? PARTICLES_MAX_RADIUS : Math.random() < 0.4 ? Math.ceil(PARTICLES_MAX_RADIUS * 0.6) : Math.ceil(PARTICLES_MAX_RADIUS * 0.3))
+   init() {
+      const x = this.game_width / 2
+      const y = this.game_height / 2
+
+      for (let i = 0; i < START_ASTEROID_NUMBER; i++) {
+         let ax = x
+         let ay = y
+
+         do {
+            ax = Math.floor(Math.random() * this.game_width)
+            ay = Math.floor(Math.random() * this.game_height)
+         } while (distanceBetweenPoint(x, ax, y, ay) < 250)
+
+         const new_asteroid = this.asteroidsFactory.random(ax, ay)
+         this.asteroids.push(new_asteroid)
       }
+   }
+
+   hitAsteroid(ast, ast_index) {
+      if (ast.type !== 'small') {
+         const new_asteroids = this.asteroidsFactory.collapse(ast.x, ast.y, ast.type)
+         this.asteroids.push(...new_asteroids)
+      }
+      // this.explode_particles.emit(ast.x, ast.y)
+      this.deleteAsteroid(ast_index)
+   }
+
+   deleteAsteroid(index) {
+      this.asteroids.splice(index, 1)
    }
 
    update() {
-      if (!this.coordinates.length) return undefined
-
-      for (let i = this.coordinates.length - 1; i >= 0; i--) {
-         if (this.distances[i] >= this.max_distances[i]) {
-            this.coordinates.splice(i, 1)
-            this.max_distances.splice(i, 1)
-            this.velocities.splice(i, 1)
-            this.distances.splice(i, 1)
-            this.sizes.splice(i, 1)
-            continue
-         }
-
-         this.coordinates[i][0] += this.velocities[i][0]
-         this.coordinates[i][1] += this.velocities[i][1]
-
-         this.distances[i] += Math.sqrt(this.velocities[i][0] ** 2 + this.velocities[i][1] ** 2)
-      }
+      this.asteroids.forEach(ast => {
+         ast.update()
+      })
    }
 }
 
-export {Particles}
 export const asteroidsFactory = new AsteroidFactory()
+
+export default AsteroidBelt
 

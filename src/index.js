@@ -18,18 +18,14 @@ window.addEventListener('load', () => {
       display.fill(game.scene.background_color)
       display.drawShip(game.scene.ship)
 
-      // display.drawLaser(game.scene.ship.lasers, radius, color)
+      display.drawLasers(game.scene.ship.shooting_system)
 
-      game.scene.ship.lasers.forEach((laser, i) => {
-         const {x, y, radius, color} = laser
-         display.drawLaser(x, y, radius, color)
-      })
       game.scene.asteroids.forEach(ast => {
          const {x, y, radius, vertices, irregularity} = ast
          display.drawAsteroid(x, y, radius, vertices, irregularity, '#eeddee')
       })
 
-      // game.scene.explode_particles.coordin
+      display.drawParticles(game.scene.explode_particles)
 
       display.render()
    }
@@ -44,7 +40,7 @@ window.addEventListener('load', () => {
       if (controller.up.active) {game.scene.ship.accelerate();}
 
       if (controller.spacebar.active) {
-         game.scene.ship.addLaser();
+         game.scene.ship.shoot()
          controller.spacebar.active = false
       }
 

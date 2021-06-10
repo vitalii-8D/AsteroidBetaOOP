@@ -54,12 +54,16 @@ class Display {
       this.buffer.fill()
    }
 
-   drawLaser(x, y, radius, fill_color) {
-      this.buffer.fillStyle = fill_color
-      this.buffer.beginPath()
-      this.buffer.arc(x, y, radius, 0, 2 * Math.PI)
-      this.buffer.closePath()
-      this.buffer.fill()
+   drawLasers({lasers, radius, color}) {
+      if (!lasers.length) return undefined
+
+      lasers.forEach(laser => {
+         this.buffer.fillStyle = color
+         this.buffer.beginPath()
+         this.buffer.arc(laser.x, laser.y, radius, 0, 2 * Math.PI)
+         this.buffer.closePath()
+         this.buffer.fill()
+      })
    }
 
    drawAsteroid(x, y, radius, vertices, irregularity, stroke_color) {
@@ -80,10 +84,14 @@ class Display {
       this.drawHitbox(x, y, radius)
    }
 
-   drawParticles(coordinates, sizes) {
+   drawParticles({coordinates, sizes, color}) {
+      if (!coordinates.length) return undefined
+
+      this.buffer.fillStyle = color
       for (let i = 0; i < coordinates.length; i++) {
-         this.buffer.fillStyle = 'orange'
+         this.buffer.beginPath()
          this.buffer.arc(coordinates[i][0], coordinates[i][1], sizes[i], 0, 2 * Math.PI)
+         this.buffer.closePath()
          this.buffer.fill()
       }
    }
