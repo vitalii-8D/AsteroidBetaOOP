@@ -17,7 +17,7 @@ class Asteroid extends Collider {
    constructor(x, y) {
       super();
 
-      // this.radius = 40
+      this.stroke_color = '#eeddee'
       this.x = x
       this.y = y
       this.velocity_x = ASTEROIDS_SPEED * (Math.random() * 2 - 1)
@@ -160,12 +160,20 @@ class AsteroidBelt {
          const new_asteroids = this.asteroidsFactory.collapse(ast.x, ast.y, ast.type)
          this.asteroids.push(...new_asteroids)
       }
-      // this.explode_particles.emit(ast.x, ast.y)
+
       this.deleteAsteroid(ast_index)
    }
 
    deleteAsteroid(index) {
       this.asteroids.splice(index, 1)
+   }
+
+   createRandomAsteroid() {
+      const [ax, ay] = randomizer(this.game_width, this.game_height)
+
+      const newAsteroid = this.asteroidsFactory.random(ax, ay)
+
+      this.asteroids.push(newAsteroid)
    }
 
    update() {

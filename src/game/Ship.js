@@ -61,6 +61,7 @@ class Ship {
          this.death_timer--
          return undefined
       }
+
       if (this.blink_number > 0) {
          this.blink_time--
 
@@ -83,16 +84,14 @@ class Ship {
 }
 
 class LaserGun {
-   constructor(radius = 3, color = '#ff1111') {
-      this.color = color
-      this.radius = radius
+   constructor() {
       this.lasers = []
 
       this.distance = 0
    }
 
-   emit(x, y, angle) {
-      const laser = new SimpleLaser(x, y, this.radius, angle)
+   emit(x, y, ship_angle) {
+      const laser = new SimpleLaser(x, y, 3, '#ff1111', ship_angle)
 
       this.lasers.push(laser)
    }
@@ -115,12 +114,13 @@ class LaserGun {
 }
 
 class SimpleLaser {
-   constructor(x, y, radius, angle) {
+   constructor(x, y, radius, color, ship_angle) {
       this.radius = radius
-      this.x = x + 4 / 3 * radius * Math.cos(angle)
-      this.y = y - 4 / 3 * radius * Math.sin(angle)
-      this.velocity_x = LASER_SPEED * Math.cos(angle)
-      this.velocity_y = -LASER_SPEED * Math.sin(angle)
+      this.color = color
+      this.x = x + 4 / 3 * radius * Math.cos(ship_angle)
+      this.y = y - 4 / 3 * radius * Math.sin(ship_angle)
+      this.velocity_x = LASER_SPEED * Math.cos(ship_angle)
+      this.velocity_y = -LASER_SPEED * Math.sin(ship_angle)
       this.distance = 0
    }
 

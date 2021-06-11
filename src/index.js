@@ -17,16 +17,9 @@ window.addEventListener('load', () => {
    const render = () => {
       display.fill(game.scene.background_color)
       display.drawShip(game.scene.ship)
-
-      display.drawLasers(game.scene.ship.shooting_system)
-
-      game.scene.asteroids.forEach(ast => {
-         const {x, y, radius, vertices, irregularity} = ast
-         display.drawAsteroid(x, y, radius, vertices, irregularity, '#eeddee')
-      })
-
+      display.drawLasers(game.scene.ship.shooting_system.lasers)
+      display.drawAsteroid(game.scene.asteroid_belt.asteroids)
       display.drawParticles(game.scene.explode_particles)
-
       display.render()
    }
 

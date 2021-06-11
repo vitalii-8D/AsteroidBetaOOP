@@ -107,7 +107,7 @@ class Collider {
 
       const dist = distanceBetweenPoint(x1, x2, y1, y2);
       if (dist < r1 + r2) {
-         callback('obj2 is array')
+         callback(obj1, obj2)
          return true
       }
 

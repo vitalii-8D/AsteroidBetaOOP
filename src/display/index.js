@@ -54,34 +54,45 @@ class Display {
       this.buffer.fill()
    }
 
-   drawLasers({lasers, radius, color}) {
+   drawLasers(lasers) {
       if (!lasers.length) return undefined
 
       lasers.forEach(laser => {
+         const {x, y, radius, color} = laser
+
          this.buffer.fillStyle = color
          this.buffer.beginPath()
-         this.buffer.arc(laser.x, laser.y, radius, 0, 2 * Math.PI)
+         this.buffer.arc(x, y, radius, 0, 2 * Math.PI)
          this.buffer.closePath()
          this.buffer.fill()
       })
    }
 
-   drawAsteroid(x, y, radius, vertices, irregularity, stroke_color) {
-      this.buffer.strokeStyle = stroke_color
-      this.buffer.lineWidth = radius / 10
-      this.buffer.beginPath()
-      this.buffer.moveTo(x + radius * irregularity[0], y)
-      const angle = 2 * Math.PI / vertices
-      for (let i = 1; i < vertices; i++) {
-         this.buffer.lineTo(
-            x + radius * irregularity[i] * Math.cos(angle * i),
-            y - radius * irregularity[i] * Math.sin(angle * i)
-         )
-      }
-      this.buffer.closePath()
-      this.buffer.stroke()
+   drawAsteroid(asteroids) {
+      // x, y, radius, vertices, irregularity, stroke_color
+      if (!asteroids.length) return undefined
 
-      this.drawHitbox(x, y, radius)
+      asteroids.forEach(ast => {
+         const {x, y, radius, vertices, irregularity, stroke_color} = ast
+
+         this.buffer.strokeStyle = stroke_color
+         this.buffer.lineWidth = radius / 10
+         this.buffer.beginPath()
+         this.buffer.moveTo(x + radius * irregularity[0], y)
+         const angle = 2 * Math.PI / vertices
+
+         for (let i = 0; i < vertices; i++) {
+            this.buffer.lineTo(
+               x + radius * irregularity[i] * Math.cos(angle * i),
+               y - radius * irregularity[i] * Math.sin(angle * i)
+            )
+         }
+         
+         this.buffer.closePath()
+         this.buffer.stroke()
+
+         this.drawHitbox(x, y, radius)
+      })
    }
 
    drawParticles({coordinates, sizes, color}) {

@@ -1,4 +1,4 @@
-const PARTICLES_NUMBER = 20
+const PARTICLES_NUMBER = 10
 const PARTICLES_SPEED = 10
 const PARTICLES_MAX_RADIUS = 3
 const PARTICLES_MAX_TRAVEL_DISTANCE = 100
@@ -18,7 +18,8 @@ class Particles {
    emit(x, y) {
       for (let i = 0; i < this.number; i++) {
          this.coordinates.push([x, y])
-         this.velocities.push([(Math.random() * PARTICLES_SPEED * 0.5 + PARTICLES_SPEED * 0.5) * Math.round(Math.random() * 2.8 - 1.4) , (Math.random() * PARTICLES_SPEED * 0.5 + PARTICLES_SPEED * 0.5) * Math.round(Math.random() * 2.8 - 1.4)])
+         // this.velocities.push([(Math.random() * PARTICLES_SPEED * 0.5 + PARTICLES_SPEED * 0.5) * Math.round(Math.random() * 2.8 - 1.4) , (Math.random() * PARTICLES_SPEED * 0.5 + PARTICLES_SPEED * 0.5) * Math.round(Math.random() * 2.8 - 1.4)])
+         this.velocities.push([(Math.random() * 2 - 1) * PARTICLES_SPEED , (Math.random() * 2 - 1) * PARTICLES_SPEED])
          this.max_distances.push(Math.random() * (this.max_distance - this.max_distance * 0.4) + this.max_distance * 0.4)
          this.distances.push(0)
          this.sizes.push(Math.random() < 0.2 ? PARTICLES_MAX_RADIUS : Math.random() < 0.4 ? Math.ceil(PARTICLES_MAX_RADIUS * 0.6) : Math.ceil(PARTICLES_MAX_RADIUS * 0.3))
