@@ -16,10 +16,13 @@ window.addEventListener('load', () => {
 
    const render = () => {
       display.fill(game.scene.background_color)
-      display.drawShip(game.scene.ship)
+
       display.drawLasers(game.scene.ship.shooting_system.lasers)
       display.drawAsteroid(game.scene.asteroid_belt.asteroids)
+      display.drawShip(game.scene.ship)
       display.drawParticles(game.scene.explode_particles)
+      display.drawLives(game.scene.lives, game.scene.ship.radius)
+
       display.render()
    }
 

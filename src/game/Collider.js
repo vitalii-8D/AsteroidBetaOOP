@@ -8,40 +8,6 @@ class Collider {
    constructor() {
    }
 
-   // collideWith(object, callback) {
-   //    const {x, y} = this
-   //    const this_radius = this.radius || 0
-   //
-   //    if (Array.isArray(object)) {
-   //       let collided_obj = object.find((obj, index) => {
-   //
-   //          const dist = distanceBetweenPoint(x, obj.x, y, obj.y)
-   //          const obj_radius = obj.radius || 0
-   //
-   //          if (dist < this_radius + obj_radius) {
-   //             return {index, obj}
-   //          }
-   //       })
-   //
-   //       if (collided_obj) {
-   //          callback(this, collided_obj.obj, collided_obj.index)
-   //          return true
-   //       }
-   //       return false
-   //    }
-   //
-   //    const dist = distanceBetweenPoint(this.x, object.x, this.y, object.y)
-   //    const obj_radius = object.radius || 0
-   //
-   //    if (dist < this.radius + obj_radius) {
-   //       callback(this, object)
-   //
-   //       return true
-   //    }
-   //
-   //    return false
-   // }
-
    checkCollisionBetween(obj1, obj2, callback) {
 
       if (Array.isArray(obj1) && Array.isArray(obj2)) {

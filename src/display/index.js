@@ -6,15 +6,30 @@ class Display {
       this.context = canvas.getContext('2d')
    }
 
-   drawShip({x, y, radius, angle, color, unvisible, is_dead}) {
+   drawShip({x, y, radius, angle, color, visible, is_dead}) {
+      this.drawHitbox(x, y, radius)
+
       if (is_dead) {
          this.drawShipsExplosion(x, y, radius)
          return undefined
       }
-      if (!unvisible) {
+      if (!visible) {
          return undefined
       }
 
+      this.drawTriangle(x, y, radius, angle, color)
+   }
+
+   drawLives(lives, radius) {
+      for (let i = 0; i < lives; i++) {
+         const x = 10 + radius * (i + 1) * 2.4
+         const y = 20 + radius
+
+         this.drawTriangle(x, y, radius, Math.PI / 2, 'white')
+      }
+   }
+
+   drawTriangle(x, y, radius, angle, color) {
       this.buffer.strokeStyle = color
       this.buffer.lineWidth = radius / 10
       this.buffer.beginPath()
@@ -32,8 +47,6 @@ class Display {
       )
       this.buffer.closePath();
       this.buffer.stroke();
-
-      this.drawHitbox(x, y, radius)
    }
 
    drawShipsExplosion(x, y, radius) {

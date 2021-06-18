@@ -6,8 +6,8 @@ const LASER_SPEED = 20
 const LASER_TRAVEL_DISTANCE = 800
 
 const SHIP_EXPLOSION_DUR = 3 // sec
-const SHIP_UNVIS_NUM = 29 // number
-const SHIP_UNVIS_BLINK_DUR = 0.3 // sec
+const SHIP_UNVIS_NUM = 12 // number
+const SHIP_UNVIS_BLINK_DUR = 0.2 // sec
 
 class Ship {
    constructor(x = 100, y = 50) {
@@ -25,7 +25,7 @@ class Ship {
 
       this.shooting_system = new LaserGun()
 
-      this.unvisible = true
+      this.visible = true
       this.blink_number = SHIP_UNVIS_NUM
       this.blink_time = Math.floor(SHIP_UNVIS_BLINK_DUR * 30)
 
@@ -35,19 +35,16 @@ class Ship {
 
    collideWithAsteroid() {
       if (this.blink_number > 0) return undefined
-      this.death()
+
+      this.is_dead = true
+      this.velocity_x = 0
+      this.velocity_y = 0
+      this.death_timer = SHIP_EXPLOSION_DUR * 30
    }
 
    accelerate() {
       this.velocity_x += SHIP_MOVING_SPEED * Math.cos(this.angle)
       this.velocity_y -= SHIP_MOVING_SPEED * Math.sin(this.angle)
-   }
-
-   death() {
-      this.is_dead = true
-      this.velocity_x = 0
-      this.velocity_y = 0
-      this.death_timer = SHIP_EXPLOSION_DUR * 30
    }
 
    shoot() {
@@ -62,16 +59,18 @@ class Ship {
          return undefined
       }
 
+      if (this.is_dead) return undefined
+
       if (this.blink_number > 0) {
          this.blink_time--
 
          if (this.blink_time === 0) {
             this.blink_number--
             if (this.blink_number === 0) {
-               this.unvisible = false
+               this.visible = false
             }
             this.blink_time = Math.floor(SHIP_UNVIS_BLINK_DUR * 30)
-            this.unvisible = !this.unvisible
+            this.visible = !this.visible
          }
       }
 
