@@ -28,12 +28,13 @@ window.addEventListener('load', () => {
       display.drawShip(game.scene.ship)
       display.drawParticles(game.scene.explode_particles)
       display.drawLives(game.scene.lives, game.scene.ship.radius)
+      display.drawScore(game.scene.score, game.hi_score, game.width)
 
       display.render()
    }
 
    const update = (dt) => {
-      if (game.state === GAME_STATES.GAME) {
+      if (game.state === GAME_STATES.GAME && !game.scene.ship.is_dead) {
          checkInputs()
       }
 

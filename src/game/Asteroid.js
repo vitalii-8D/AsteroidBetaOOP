@@ -4,7 +4,7 @@ const MAX_VERTICES = 16
 const MIN_VERTICES = 5
 const PRONGNESS = 1 // from 0 to 1
 const ASTEROIDS_SPEED = 2
-const START_ASTEROID_NUMBER = 38
+const START_ASTEROID_NUMBER = 5
 
 const SML_AST_POINTS = 500
 const SML_AST_RADIUS = 15
@@ -100,8 +100,7 @@ class AsteroidFactory {
 
       if (random < 0.35) {
          type = 'large'
-      }
-      if (random > 0.55) {
+      } else if (random > 0.55) {
          type = 'medium'
       } else {
          type = 'small'
@@ -174,6 +173,16 @@ class AsteroidBelt {
       const newAsteroid = this.asteroidsFactory.random(ax, ay)
 
       this.asteroids.push(newAsteroid)
+   }
+
+   addAsteroidsForDemo() {
+      for (let i = 0; i < 30; i++) {
+         const [ax, ay] = randomizer(this.game_width, this.game_height)
+
+         const newAsteroid = this.asteroidsFactory.random(ax, ay)
+
+         this.asteroids.push(newAsteroid)
+      }
    }
 
    update() {

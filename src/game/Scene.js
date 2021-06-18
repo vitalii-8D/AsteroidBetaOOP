@@ -4,6 +4,7 @@ import Collider, {distanceBetweenPoint} from "./Collider";
 import Particles from "./Particles";
 
 const MAX_LIVES = 3
+const DIFFICULTY = 0.5 // 0...1
 const GAME_STATES = {
    MENU: 'menu',
    GAME: 'game',
@@ -24,6 +25,10 @@ class Scene extends Collider {
 
       this.width = width
       this.height = height
+
+      this.counter = 0
+
+      this.score = 0
 
       this.asteroid_belt = new AsteroidBelt(width, height)
 
@@ -95,6 +100,10 @@ class Scene extends Collider {
 
       if (!this.ship.blink_number && !this.ship.is_dead) {
          this.checkCollisionBetween(this.ship, this.asteroid_belt.asteroids, (ship, ast, ast_index) => {
+            this.score += ast.points
+            this.counter += ast.points
+            this.checkForAddingAsteroid()
+
             this.ship.collideWithAsteroid()
             this.asteroid_belt.hitAsteroid(ast, ast_index)
 
@@ -102,11 +111,28 @@ class Scene extends Collider {
          })
       }
       this.checkCollisionBetween(this.asteroid_belt.asteroids, this.ship.shooting_system.lasers, (ast, ast_index, laser, laser_index) => {
+         this.score += ast.points
+         this.counter += ast.points
+         this.checkForAddingAsteroid()
+
          this.asteroid_belt.hitAsteroid(ast, ast_index)
          this.ship.shooting_system.deleteLaser(laser_index)
 
          this.explode_particles.emit(ast.x, ast.y)
       })
+
+      this.ship.shooting_system.lasers.forEach(laser => {
+         this.collideWorldBounds(laser)
+      })
+   }
+
+   checkForAddingAsteroid() {
+      const difficulty_level = 1200 - DIFFICULTY * 800 // Just magic numbers :)
+
+      if (this.counter > difficulty_level) {
+         this.counter -= difficulty_level
+         this.asteroid_belt.createRandomAsteroid()
+      }
    }
 
 }

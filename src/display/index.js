@@ -120,6 +120,15 @@ class Display {
       }
    }
 
+   drawScore(score, hi_score, width) {
+      const font_size = width / 20
+      this.buffer.fillStyle = '#eeeeee'
+      this.buffer.font = font_size + 'px serif'
+      this.buffer.textAlign = "left"
+      this.buffer.fillText(`Score: ${score}`, width / 3.5, font_size)
+      this.buffer.fillText(`HI: ${hi_score}`, width * 2 / 3, font_size)
+   }
+
    drawHitbox(x, y, radius) {
       if (!debug) return undefined
 

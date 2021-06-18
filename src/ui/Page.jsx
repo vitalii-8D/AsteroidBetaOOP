@@ -17,8 +17,9 @@ const startPage = (fun) => {
 const gameOverPage = (fun) => {
 
    return (
-      <div className="container" style='opacity: 0.5'>
-         <h1 style='margin-bottom: 50px;'>You lose! One more try?</h1>
+      <div className="container" style=''>
+         <h1 style='margin-bottom: 10px;'>You lose! One more try?</h1>
+         <div className='score' style='margin-bottom: 40px; font-size: 24px;'>score</div>
          <button className="btn" onClick={fun}
                  style='background-color: green; color: #dddddd'>
             Retry
