@@ -3,6 +3,12 @@ import Display from "./display";
 import Game from "./game";
 import Engine from "./engine";
 
+const GAME_STATES = {
+   MENU: 'menu',
+   GAME: 'game',
+   GAME_OVER: 'game_over'
+}
+
 import '/static/styles/main.css'
 
 window.addEventListener('load', () => {
@@ -27,6 +33,14 @@ window.addEventListener('load', () => {
    }
 
    const update = (dt) => {
+      if (game.state === GAME_STATES.GAME) {
+         checkInputs()
+      }
+
+      game.update(dt)
+   }
+
+   function checkInputs() {
       if (controller.left.active) {game.scene.ship.rotation = 1}
       if (controller.right.active) {game.scene.ship.rotation = -1}
       if (!controller.left.active && !controller.right.active) {
@@ -39,13 +53,11 @@ window.addEventListener('load', () => {
          game.scene.ship.shoot()
          controller.spacebar.active = false
       }
-
-      game.update(dt)
    }
 
    let controller = new Controller()
    let display = new Display(document.getElementById('canvas'))
-   let game = new Game()
+   let game = new Game(1000, 700, document.getElementById('container'))
    let engine = new Engine(1000/30, update, render)
 
    display.buffer.canvas.width = game.width

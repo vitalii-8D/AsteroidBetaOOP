@@ -40,8 +40,7 @@ class Scene extends Collider {
       this.asteroid_belt.update()
       this.explode_particles.update()
 
-      if (!this.lives) return undefined
-      if (this.ship.is_dead && this.ship.death_timer === 0) {
+      if (this.ship.is_dead && this.ship.death_timer === 0 && this.lives !== 0) {
          this.resetShip()
          return undefined
       }
@@ -87,10 +86,12 @@ class Scene extends Collider {
    }
 
    checkAllCollisions() {
-      this.collideWorldBounds(this.ship)
       this.asteroid_belt.asteroids.forEach(ast => {
          this.collideWorldBounds(ast)
       })
+      if (this.lives === 0) return undefined
+
+      this.collideWorldBounds(this.ship)
 
       if (!this.ship.blink_number && !this.ship.is_dead) {
          this.checkCollisionBetween(this.ship, this.asteroid_belt.asteroids, (ship, ast, ast_index) => {

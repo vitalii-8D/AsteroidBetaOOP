@@ -46,7 +46,7 @@ module.exports = {
       publicPath: "/"
    },
    resolve: {
-      extensions: ['.js'],
+      extensions: ['.js', '.jsx'],
       alias: {
          '@static': path.resolve(__dirname, 'static'),
          '@components': path.resolve(__dirname, 'src', 'components'),
@@ -99,16 +99,17 @@ module.exports = {
             use: [MiniCssExtractPlugin.loader, 'css-loader']
          },
          {  // Babel for compiling to previous standard
-            test: /\.m?js$/,
+            test: /\.(m?js|jsx)$/,
             exclude: /node_modules/,
             use: {
                loader: "babel-loader",
                options: {
-                  presets: ['@babel/preset-env'],
+                  presets: ['@babel/preset-env', '@babel/preset-react'],
                   plugins: ['@babel/plugin-proposal-class-properties']
                }
             }
          }
       ]
    }
+
 }
