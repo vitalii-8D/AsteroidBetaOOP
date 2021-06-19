@@ -1,13 +1,11 @@
 import {distanceBetweenPoint} from "./Collider";
+import {soundThrust, soundLaser, soundExplode} from "../sounds/SoundManager";
 
-const SHIP_MOVING_SPEED = 1
-const SHIP_ROTATION_SPEED = 7
-const LASER_SPEED = 20
-const LASER_TRAVEL_DISTANCE = 800
-
-const SHIP_EXPLOSION_DUR = 3 // sec
-const SHIP_UNVIS_NUM = 12 // number
-const SHIP_UNVIS_BLINK_DUR = 0.2 // sec
+import {
+   SHIP_MOVING_SPEED, SHIP_EXPLOSION_DUR,
+   SHIP_ROTATION_SPEED, SHIP_UNVIS_BLINK_DUR,
+   SHIP_UNVIS_NUM, LASER_SPEED, LASER_TRAVEL_DISTANCE
+} from "../constants";
 
 class Ship {
    constructor(x = 100, y = 50) {
@@ -25,6 +23,7 @@ class Ship {
 
       this.shooting_system = new LaserGun()
 
+      this.thrusting = false
       this.visible = true
       this.blink_number = SHIP_UNVIS_NUM
       this.blink_time = Math.floor(SHIP_UNVIS_BLINK_DUR * 30)
@@ -35,6 +34,10 @@ class Ship {
 
    collideWithAsteroid() {
       if (this.blink_number > 0) return undefined
+
+      soundThrust.stop()
+      this.thrusting = false
+      soundExplode.play()
 
       this.is_dead = true
       this.velocity_x = 0
@@ -48,6 +51,7 @@ class Ship {
    }
 
    shoot() {
+      soundLaser.play()
       this.shooting_system.emit(this.x, this.y, this.angle)
    }
 
@@ -76,6 +80,14 @@ class Ship {
 
       this.x += this.velocity_x
       this.y += this.velocity_y
+
+      if (distanceBetweenPoint(this.velocity_x, 0, this.velocity_y, 0) > SHIP_MOVING_SPEED * 4) {
+         soundThrust.play()
+         this.thrusting = true
+      } else {
+         soundThrust.stop()
+         this.thrusting = false
+      }
 
       this.angle += this.rotation * SHIP_ROTATION_SPEED * (2 * Math.PI / 360)
    }

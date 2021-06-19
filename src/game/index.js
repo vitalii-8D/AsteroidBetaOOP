@@ -1,11 +1,7 @@
 import Scene from "./Scene";
 import {startPage, gameOverPage} from "../ui/Page";
 
-const GAME_STATES = {
-   MENU: 'menu',
-   GAME: 'game',
-   GAME_OVER: 'game_over'
-}
+import {GAME_STATES} from "../constants";
 
 class Game {
    constructor(width = 1000, height = 700, container) {

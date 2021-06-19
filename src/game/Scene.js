@@ -1,15 +1,9 @@
 import Ship from "./Ship";
 import AsteroidBelt from "./Asteroid";
-import Collider, {distanceBetweenPoint} from "./Collider";
+import Collider from "./Collider";
 import Particles from "./Particles";
 
-const MAX_LIVES = 3
-const DIFFICULTY = 0.5 // 0...1
-const GAME_STATES = {
-   MENU: 'menu',
-   GAME: 'game',
-   GAME_OVER: 'game_over'
-}
+import {MAX_LIVES, DIFFICULTY, GAME_STATES} from "../constants";
 
 class Scene extends Collider {
    constructor(width, height) {

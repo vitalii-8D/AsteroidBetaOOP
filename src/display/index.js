@@ -1,4 +1,4 @@
-const debug = true
+import {DEBUG_MODE} from "../constants";
 
 class Display {
    constructor(canvas) {
@@ -6,7 +6,7 @@ class Display {
       this.context = canvas.getContext('2d')
    }
 
-   drawShip({x, y, radius, angle, color, visible, is_dead}) {
+   drawShip({x, y, radius, angle, color, visible, is_dead, thrusting}) {
       this.drawHitbox(x, y, radius)
 
       if (is_dead) {
@@ -15,6 +15,9 @@ class Display {
       }
       if (!visible) {
          return undefined
+      }
+      if (thrusting) {
+         this.drawThrusting(x, y, radius, angle)
       }
 
       this.drawTriangle(x, y, radius, angle, color)
@@ -47,6 +50,28 @@ class Display {
       )
       this.buffer.closePath();
       this.buffer.stroke();
+   }
+
+   drawThrusting(x, y, radius, angle) {
+      this.buffer.fillStyle = 'red';
+      this.buffer.strokeStyle = 'yellow';
+      this.buffer.lineWidth = radius / 20;
+      this.buffer.beginPath();
+      this.buffer.moveTo(  //
+         x - radius * (2 / 3 * Math.cos(angle) + 0.4 * Math.sin(angle)),
+         y + radius * (2 / 3 * Math.sin(angle) - 0.4 * Math.cos(angle))
+      )
+      this.buffer.lineTo( //
+         x - radius * 1.5 * Math.cos(angle),
+         y + radius * 1.5 * Math.sin(angle)
+      )
+      this.buffer.lineTo( //
+         x - radius * (2 / 3 * Math.cos(angle) - 0.4 * Math.sin(angle)),
+         y + radius * (2 / 3 * Math.sin(angle) + 0.4 * Math.cos(angle))
+      )
+      this.buffer.closePath();
+      this.buffer.stroke();
+      this.buffer.fill();
    }
 
    drawShipsExplosion(x, y, radius) {
@@ -130,7 +155,7 @@ class Display {
    }
 
    drawHitbox(x, y, radius) {
-      if (!debug) return undefined
+      if (!DEBUG_MODE) return undefined
 
       this.buffer.strokeStyle = 'green'
       this.buffer.lineWidth = 1

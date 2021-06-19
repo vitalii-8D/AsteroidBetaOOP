@@ -3,11 +3,7 @@ import Display from "./display";
 import Game from "./game";
 import Engine from "./engine";
 
-const GAME_STATES = {
-   MENU: 'menu',
-   GAME: 'game',
-   GAME_OVER: 'game_over'
-}
+import {GAME_STATES} from "./constants";
 
 import '/static/styles/main.css'
 

@@ -1,17 +1,10 @@
 import Collider, {distanceBetweenPoint} from "./Collider";
+import {soundHit} from "../sounds/SoundManager";
 
-const MAX_VERTICES = 16
-const MIN_VERTICES = 5
-const PRONGNESS = 1 // from 0 to 1
-const ASTEROIDS_SPEED = 2
-const START_ASTEROID_NUMBER = 5
-
-const SML_AST_POINTS = 500
-const SML_AST_RADIUS = 15
-const MED_AST_POINTS = 300
-const MED_AST_RADIUS = 25
-const LRG_AST_POINTS = 100
-const LRG_AST_RADIUS = 40
+import {
+   MAX_VERTICES, MIN_VERTICES,PRONGNESS,ASTEROIDS_SPEED,START_ASTEROID_NUMBER,
+   SML_AST_POINTS,SML_AST_RADIUS,MED_AST_POINTS,MED_AST_RADIUS,LRG_AST_POINTS,LRG_AST_RADIUS
+} from "../constants";
 
 class Asteroid extends Collider {
    constructor(x, y) {
@@ -155,6 +148,8 @@ class AsteroidBelt {
    }
 
    hitAsteroid(ast, ast_index) {
+      soundHit.play()
+
       if (ast.type !== 'small') {
          const new_asteroids = this.asteroidsFactory.collapse(ast.x, ast.y, ast.type)
          this.asteroids.push(...new_asteroids)
