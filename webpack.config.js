@@ -13,17 +13,17 @@ const isProd = process.env.NODE_ENV === 'production';
 const optimization = () => {
    // Minimize JS and CSS in production mode
    let config = {
-      minimize: isProd
-      // splitChunks: {
-      //    cacheGroups: {
-      //       commons: {
-      //          test: /[\\/]node_modules[\\/]/,
-      //          name: 'vendors',
-      //          chunks: 'all',
-      //          filename: '[name].bundle.js'
-      //       }
-      //    }
-      // }
+      minimize: isProd,
+      splitChunks: {
+         cacheGroups: {
+            commons: {
+               test: /[\\/]node_modules[\\/]/,
+               name: 'vendors',
+               chunks: 'all',
+               filename: '[name].bundle.js'
+            }
+         }
+      }
    }
 
    if (isProd) {
@@ -43,7 +43,7 @@ module.exports = {
       filename: '[name].bundle.js',
       chunkFilename: '[name].chunk.js',
       path: path.resolve(__dirname, 'build'),
-      publicPath: "/"
+      publicPath: '',
    },
    resolve: {
       extensions: ['.js', '.jsx'],
@@ -56,7 +56,7 @@ module.exports = {
       }
    },
    optimization: optimization(),
-   mode: 'development',
+   mode: isProd ? 'production' : 'development',
    devtool: 'source-map',
    devServer: {
       // open: true,
@@ -73,14 +73,14 @@ module.exports = {
             {
                from: path.resolve(__dirname, 'static/asteroid.ico'),
                to: path.resolve(__dirname, 'build')
-            }
+            },
          ]
       }),
       new MiniCssExtractPlugin({ // Pastes CSS in different file
          filename: '[name].css',
       }),
       new HTMLWebpackPlugin({ // Copies HTML template from 'static' folder
-         template: './static/index.html',
+         template: 'static/index.html',
          minify: {
             collapseWhitespace: isProd
          },
@@ -108,7 +108,19 @@ module.exports = {
                   plugins: ['@babel/plugin-proposal-class-properties']
                }
             }
-         }
+         },
+         {
+            test: /\.m4a$/,
+            use: [{
+               loader: 'file-loader',
+               options: {
+                  name: '[name].[ext]',
+                  // outputPath: 'sounds',
+                  // publicPath: 'sounds/',
+                  // useRelativePaths: true
+               }
+            }]
+         },
       ]
    }
 

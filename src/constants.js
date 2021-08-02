@@ -1,10 +1,10 @@
-export const DEBUG_MODE = true
+export const DEBUG_MODE = false
 
 // Asteroid
 export const MAX_VERTICES = 16 // Max number of Asteroid`s vertices
 export const MIN_VERTICES = 5 // Min number of Asteroid`s vertices
 export const PRONGNESS = 1 // from 0 to 1
-export const ASTEROIDS_SPEED = 2 // Asteroid`s speed
+export const ASTEROIDS_SPEED = 2.5 // Asteroid`s speed
 export const START_ASTEROID_NUMBER = 5 // Initial amount of Asteroids
 
 export const SML_AST_POINTS = 500 // Points for small asteroid
@@ -34,4 +34,4 @@ export const SHIP_UNVIS_NUM = 12 // number
 export const SHIP_UNVIS_BLINK_DUR = 0.2 // sec
 
 // Sounds
-export const SOUND_ON = false
+export const SOUND_ON = true

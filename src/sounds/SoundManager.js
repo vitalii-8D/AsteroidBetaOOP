@@ -1,5 +1,10 @@
 import {SOUND_ON} from "../constants";
 
+import * as sound_hit from './hit.m4a'
+import * as sound_laser from './laser.m4a'
+import * as sound_explode from './explode.m4a'
+import * as sound_thrust from './thrust.m4a'
+
 class Sound {
    constructor(src, max_streams = 1, vol = 1) {
       this.src = src
@@ -33,10 +38,15 @@ class Sound {
 
 }
 
-const soundHit = new Sound('src/sounds/hit.m4a', 10, 1)
-const soundLaser = new Sound('src/sounds/laser.m4a', 10, 1)
-const soundExplode = new Sound('src/sounds/explode.m4a', 1, 0.3)
-const soundThrust = new Sound('src/sounds/thrust.m4a', 1, 0.2)
+// const soundHit = new Sound(sound_hit, 10, 1)
+// const soundLaser = new Sound(sound_laser, 10, 1)
+// const soundExplode = new Sound(sound_explode, 1, 0.3)
+// const soundThrust = new Sound(sound_thrust, 1, 0.2)
+
+const soundHit = new Sound('./hit.m4a', 10, 1)
+const soundLaser = new Sound('./laser.m4a', 10, 1)
+const soundExplode = new Sound('./explode.m4a', 1, 0.3)
+const soundThrust = new Sound('./thrust.m4a', 1, 0.2)
 
 export {
    soundExplode,

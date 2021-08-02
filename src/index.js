@@ -5,7 +5,7 @@ import Engine from "./engine";
 
 import {GAME_STATES} from "./constants";
 
-import '/static/styles/main.css'
+import '../static/styles/main.css'
 
 window.addEventListener('load', () => {
    const keyDownUp = (event) => {
