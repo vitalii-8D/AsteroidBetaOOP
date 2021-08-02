@@ -5,4 +5,4 @@
 
 Here is the game for you. Legendary **Asteroids!**
 
-To play click here >>> [**PLAY**](https://vitalii-8d.github.io/AsteroidBetaOOP/)
+Click here to play --> [**PLAY**](https://vitalii-8d.github.io/AsteroidBetaOOP/)
