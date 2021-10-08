@@ -10,6 +10,7 @@ Developed with desire of creating the most beautifull JS game architecture 😅 
 * MVC
 * OOP principles
 * A bit of patterns
+* ... and React button in the middle 😂
 
 
 > First game
